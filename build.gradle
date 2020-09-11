@@ -20,6 +20,7 @@ targetCompatibility = 11
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 project.ext {
@@ -32,8 +33,10 @@ mainClassName = 'org.jhapps.StravaAuthenticatorApplication'
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web:$springVersion",
         "org.springframework.boot:spring-boot-gradle-plugin:$springVersion",
-        "javax.ws.rs:javax.ws.rs-api:2.1.1")
-
+        "org.springframework.boot:spring-boot-starter-thymeleaf:$springVersion",
+        "org.springframework.boot:spring-boot-starter-validation:$springVersion",
+        "javax.ws.rs:javax.ws.rs-api:2.1.1",
+        "javax.validation:validation-api:2.0.0.Final")
 }
 
 

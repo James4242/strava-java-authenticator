@@ -2,14 +2,25 @@ package org.jhapps;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotEmpty;
+
+@Validated
 @Component
 @ConfigurationProperties
 public class StravaAuthenticatorConfiguration {
 
+    @NotEmpty
     private String clientID;
+
+    @NotEmpty
     private String clientSecret;
+
+    @NotEmpty
     private String applicationUri;
+
+    @NotEmpty
     private String stravaUri;
 
     public String getClientID() {

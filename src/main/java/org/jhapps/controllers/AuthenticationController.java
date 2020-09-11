@@ -24,21 +24,20 @@ public class AuthenticationController {
     @Autowired
     private StravaAuthenticatorConfiguration configuration;
 
-    @RequestMapping("/")
-    public ResponseEntity<Void> sendStravaAuthRequest() {
-        URI uri = UriComponentsBuilder.fromUriString(configuration.getStravaUri())
-                .path("/oauth/authorize")
-                .build().toUri();
-
+    @RequestMapping("/authenticate")
+    public ResponseEntity<String> sendStravaAuthRequest() {
         String redirectURI = UriComponentsBuilder.fromUriString(configuration.getApplicationUri())
                 .path("/exchange_token&approval_prompt=force&scope=read")
                 .build().toUriString();
 
+        UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(configuration.getStravaUri())
+                .path("/oauth/authorize")
+                .queryParam("client_id", configuration.getClientID())
+                .queryParam("response_type", "code")
+                .queryParam("redirect_uri", redirectURI);
+
         HttpHeaders headers = new HttpHeaders();
-        headers.set("client_id", configuration.getClientID());
-        headers.set("response_type", "code");
-        headers.set("redirect_uri", redirectURI);
-        headers.setLocation(uri);
+        headers.setLocation(uri.build().toUri());
 
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
@@ -64,7 +63,7 @@ public class AuthenticationController {
         map.put("grant_type", "authorization_code");
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
-
-        return restTemplate.postForEntity(uri, entity, String.class);
+        ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(uri, entity, String.class);
+        return stringResponseEntity;
     }
 }
